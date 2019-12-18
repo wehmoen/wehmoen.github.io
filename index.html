@@ -72,7 +72,13 @@
             }
         });
     }, 500);
-
+    $(() => {
+        
+        if (window.location.host !== 'nico.network') {
+            window.location.href = 'https://nico.network'
+        }
+    
+    })
     setInterval(function () {
         if ($('#prompt').css('visibility') == 'hidden') {
             $('#prompt').css('visibility', 'visible');
