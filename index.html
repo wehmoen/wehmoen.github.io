@@ -1,91 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>nico.netowork - I create stuff</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="/style.css">
-
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <meta charset="UTF-8">
+    <title>Add Ronin Mainnet & Testnet to Metamask</title>
 </head>
 <body>
-<div id="content" class="overlay">
-    <!-- Overlay content -->
-    <div class="overlay-content">
-        <h1><span style="color:#bb0000; background-color:transparent;">nico</span>@<span
-                style="color:#c6c6c6; background-color:transparent; ">network</span>: <span id="text"></span><span
-                id="prompt">_</span></h1>
-        <h4 class="hidden">                    
-            <a title="Find me on: Github.com" href="https://github.com/wehmoen"><img
-                    src="https://avatars2.githubusercontent.com/u/6608103?s=460&v=4" style="border-radius:50%;"
-                    width="64"></a>           
-        </h4>
-    </div>
-
-</div>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-<script>
-    $.fn.write = function (options) {
-        i = 0;
-        options = $.extend({
-            'text': '',
-            'interval': 300
-        }, options);
-        me = this;
-        writer = setInterval(function () {
-            me.append(options.text.charAt(i));
-            i = i + 1;
-            if (i > options.text.length) {
-                clearInterval(writer);
-                if (typeof options.callback == "function") options.callback();
-            }
-        }, options.interval);
-
-        return me;
-    };
-    setTimeout(function () {
-        $('#text').write({
-            "text": "/bin/social_media -github", "interval": 100, "callback": function () {
-                setTimeout(function () {
-                    $('h4').removeClass('hidden');
-                    $('#text').text('').write({"text": "Welcome!", "interval": 100})
-                }, 500);
-
-            }
-        });
-    }, 500);
-    $(() => {
-        
-        if (window.location.host !== 'nico.network') {
-            window.location.href = 'https://nico.network'
-        }
     
-    })
-    setInterval(function () {
-        if ($('#prompt').css('visibility') == 'hidden') {
-            $('#prompt').css('visibility', 'visible');
-        } else {
-            $('#prompt').css('visibility', 'hidden');
-        }
-    }, 500);
+    <h1>Add Ronin to MetaMask</h1>
+
+<button onclick="activateNetwork('ronin_mainnet')">Add Ronin Mainnet</button>
+<button onclick="activateNetwork('ronin_saigon_testnet')">Add Ronin Testnet</button>
+
+<script>
+  const NETWORKS = {
+    "ronin_mainnet": {
+      chainId: '0x7e4',
+      chainName: 'Ronin Mainnet',
+      rpcUrls: [
+        'https://api.roninchain.com/rpc'
+      ],
+      nativeCurrency: {
+        name: "Ronin",
+        symbol: "RON",
+        decimals: 18
+      },
+      blockExplorerUrls: [
+        'https://explorer.roninchain.com/'
+      ]
+    },
+    "ronin_saigon_testnet": {
+      chainId: "0x7e5",
+      chainName: "Ronin Saigon Testnet",
+      nativeCurrency: {
+        name: "Test Ronin",
+        symbol: "tRON",
+        decimals: 18
+      },
+      rpcUrls: [
+        'https://saigon-testnet.roninchain.com/rpc'
+      ],
+      blockExplorerUrls: [
+        'https://saigon-explorer.roninchain.com/'
+      ]
+    }
+  }
+
+  function activateNetwork(network) {
+    if (NETWORKS[network]) {
+      window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [NETWORKS[network]],
+      }).then(() => {
+        alert("Network activated successfully. You can now switch to " + NETWORKS[network].chainName + " in Metamask.")
+      }).catch((error) => {
+        alert("Network activation failed. Please try again. See console for details.");
+        console.log(error);
+      });
+    }
+  }
 </script>
 </body>
 </html>
