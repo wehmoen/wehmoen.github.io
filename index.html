@@ -5,59 +5,196 @@
     <title>Add Ronin Mainnet & Testnet to Metamask</title>
 </head>
 <body>
-    
-    <h1>Add Ronin to MetaMask</h1>
+
+<h1>Add Ronin to MetaMask</h1>
 
 <button onclick="activateNetwork('ronin_mainnet')">Add Ronin Mainnet</button>
 <button onclick="activateNetwork('ronin_saigon_testnet')">Add Ronin Testnet</button>
 
-<script>
-  const NETWORKS = {
-    "ronin_mainnet": {
-      chainId: '0x7e4',
-      chainName: 'Ronin Mainnet',
-      rpcUrls: [
-        'https://api.roninchain.com/rpc'
-      ],
-      nativeCurrency: {
-        name: "Ronin",
-        symbol: "RON",
-        decimals: 18
-      },
-      blockExplorerUrls: [
-        'https://explorer.roninchain.com/'
-      ]
-    },
-    "ronin_saigon_testnet": {
-      chainId: "0x7e5",
-      chainName: "Ronin Saigon Testnet",
-      nativeCurrency: {
-        name: "Test Ronin",
-        symbol: "tRON",
-        decimals: 18
-      },
-      rpcUrls: [
-        'https://saigon-testnet.roninchain.com/rpc'
-      ],
-      blockExplorerUrls: [
-        'https://saigon-explorer.roninchain.com/'
-      ]
-    }
-  }
+<h2>Add Token to MetaMask</h2>
 
-  function activateNetwork(network) {
-    if (NETWORKS[network]) {
-      window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [NETWORKS[network]],
-      }).then(() => {
-        alert("Network activated successfully. You can now switch to " + NETWORKS[network].chainName + " in Metamask.")
-      }).catch((error) => {
-        alert("Network activation failed. Please try again. See console for details.");
-        console.log(error);
-      });
+<div id="token"></div>
+
+<script>
+
+    const TOKEN = {
+        MAINNET: {
+            USDC:
+                {
+                    type: 'ERC20',
+                    options: {
+                        address: `0x0b7007c13325c48911f73a2dad5fa5dcbf808adc`,
+                        symbol: 'USDC',
+                        decimals: 6,
+                        image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/usdc-48.png',
+                    }
+                },
+            AXS: {
+                type: 'ERC20',
+                options: {
+                    address: `0x97a9107c1793bc407d6f527b77e7fff4d812bece`,
+                    symbol: 'AXS',
+                    decimals: 18,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/axs.png',
+                }
+            },
+            SLP: {
+                type: 'ERC20',
+                options: {
+                    address: `0xa8754b9fa15fc18bb59458815510e40a12cd2014`,
+                    symbol: 'SLP',
+                    decimals: 0,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/slp.png',
+                }
+            },
+            WETH: {
+                type: 'ERC20',
+                options: {
+                    address: `0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5`,
+                    symbol: 'WETH',
+                    decimals: 18,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/eth.png',
+                }
+            },
+            AEC: {
+                type: 'ERC20',
+                options: {
+                    address: `0x173a2d4fa585a63acd02c107d57f932be0a71bcc`,
+                    symbol: 'AEC',
+                    decimals: 0,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/aec.png',
+                }
+            }
+        },
+        TESTNET: {
+            USDC:
+                {
+                    type: 'ERC20',
+                    options: {
+                        address: `0x067fbff8990c58ab90bae3c97241c5d736053f77`,
+                        symbol: 'USDC',
+                        decimals: 6,
+                        image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/usdc-48.png',
+                    }
+                },
+            AXS: {
+                type: 'ERC20',
+                options: {
+                    address: `0x3c4e17b9056272ce1b49f6900d8cfd6171a1869d`,
+                    symbol: 'AXS',
+                    decimals: 18,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/axs.png',
+                }
+            },
+            SLP: {
+                type: 'ERC20',
+                options: {
+                    address: `0x82f5483623d636bc3deba8ae67e1751b6cf2bad2`,
+                    symbol: 'SLP',
+                    decimals: 0,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/slp.png',
+                }
+            },
+            WETH: {
+                type: 'ERC20',
+                options: {
+                    address: `0x29c6f8349a028e1bdfc68bfa08bdee7bc5d47e16`,
+                    symbol: 'WETH',
+                    decimals: 18,
+                    image: 'https://assets.axieinfinity.com/explorer/images/contract-icon/eth.png',
+                }
+            }
+        }
     }
-  }
+
+    const NETWORKS = {
+        "ronin_mainnet": {
+            chainId: '0x7e4',
+            chainName: 'Ronin Mainnet',
+            rpcUrls: [
+                'https://api.roninchain.com/rpc'
+            ],
+            nativeCurrency: {
+                name: "Ronin",
+                symbol: "RON",
+                decimals: 18
+            },
+            blockExplorerUrls: [
+                'https://explorer.roninchain.com/'
+            ]
+        },
+        "ronin_saigon_testnet": {
+            chainId: "0x7e5",
+            chainName: "Ronin Saigon Testnet",
+            nativeCurrency: {
+                name: "Test Ronin",
+                symbol: "tRON",
+                decimals: 18
+            },
+            rpcUrls: [
+                'https://saigon-testnet.roninchain.com/rpc'
+            ],
+            blockExplorerUrls: [
+                'https://saigon-explorer.roninchain.com/'
+            ]
+        }
+    }
+
+
+    function watchToken(network, token) {
+        const details = TOKEN[network][token];
+
+        if (details) {
+            window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: details
+            }).then(() => {
+                alert("Token added successfully. You can now check your " + details.options.symbol + " balance in Metamask.")
+            }).catch((error) => {
+                alert("Adding token failed. Please try again. See console for details.");
+                console.log(error);
+            });
+        }
+    }
+
+    function activateNetwork(network) {
+        if (NETWORKS[network]) {
+            window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [NETWORKS[network]],
+            }).then(() => {
+                alert("Network activated successfully. You can now switch to " + NETWORKS[network].chainName + " in Metamask.")
+            }).catch((error) => {
+                alert("Network activation failed. Please try again. See console for details.");
+                console.log(error);
+            });
+        }
+    }
+
+    window.onload = function() {
+
+        const con = document.getElementById("token")
+
+        const networks = Object.keys(TOKEN);
+        for (const n of networks) {
+            const h = document.createElement("h3")
+            h.innerText = n;
+            con.appendChild(h)
+            const token = Object.keys(TOKEN[n]);
+            for (const t of token) {
+                const tO = TOKEN[n][t]
+                const b = document.createElement("button");
+                const i = document.createElement("img");
+                i.src = tO.options.image;
+                i.width = 16
+                b.appendChild(i);
+                const te = document.createTextNode(tO.options.symbol)
+                b.appendChild(te)
+                b.setAttribute("onclick", `watchToken("${n}", "${t}")`)
+                con.appendChild(b)
+            }
+        }
+    }
 </script>
 </body>
 </html>
