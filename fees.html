@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ronin Fee Calculator</title>
+    <style>
+        #ronPrice {
+            border: 1px solid black;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding: 5px;
+            width: fit-content;
+        }
+
+        #address {
+            width: 450px;
+            font-size: large;
+        }
+
+        button {
+            display: block;
+            margin-top: 5px;
+        }
+
+        #progress {
+            height: 15px;
+            accent-color: rgb(255, 146, 56);
+            appearance: none;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h2>RONIN FEES</h2>
+
+Enter your address and hit the button. <br>
+The tool will calculate how much RON you spent on fees so far.<br>
+
+<div id="input">
+    <b>Address</b>
+    <div>
+        <input type="text" id="address" value="ronin:3759468f9fd589665c8affbe52414ef77f863f72">
+    </div>
+    <button>GET FEES 🔥</button>
+</div>
+<div id="result"></div>
+<div id="progress"></div>
+<hr>
+<i><small>built by @wehmoen - RON Price: <span id="ronPriceInner"></span> USD</small></i>
+<script src="main.js"></script>
+<script>
+    class PB {
+        el = null;
+        constructor(max, mp) {
+            this.el = document.createElement("progress");
+            this.el.max = max;
+            mp.appendChild(this.el);
+        }
+
+        next() {
+            this.el.value++;
+        }
+
+        complete() {
+            this.el.remove();
+        }
+
+    }
+    window.onload = async function () {
+        const button = document.querySelector('button');
+        const input = document.querySelector('input');
+        const price = await getPrice();
+        document.getElementById("ronPriceInner").innerHTML = price.toFixed(4);
+        button.addEventListener('click', async () => {
+            button.disabled = true;
+            input.disabled = true
+            const address = input.value;
+            await scrape(address, price);
+            button.disabled = false;
+            input.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>
