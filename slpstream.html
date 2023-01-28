@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live SLP Transactions - RONIN</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: beige;
+            font-family: 'Comic Sans MS', system-ui, sans-serif;
+        }
+
+        code {
+            background: #252525;
+            color: #f13434;
+            padding: 5px 7px;
+            border-radius: 3px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00B7FF;
+        }
+
+        #status {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            height: 25px;
+            background: white;
+            border-top: 1px solid black;
+        }
+    </style>
+</head>
+<body style="text-align: center">
+<h1>Live SLP Transactions</h1>
+<div id="status">Connecting...</div>
+<div id="trxs"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7/web3.min.js"></script>
+<script>
+
+    function fix(str) {
+        let rstr = str.split("").reverse().join("");
+        rstr = rstr.substring(0, 40);
+        return "0x" + rstr.split("").reverse().join("");
+    }
+
+    window.onload = function () {
+        const RoninRestRoninProviderWS = new Web3.providers.WebsocketProvider("wss://rpc2.ronin.rest/ronin-mainnet/ws", {
+            reconnect: {
+                auto: true,
+                delay: 5000, // ms
+                maxAttempts: 5,
+                onTimeout: false
+            }
+        });
+        const ronin = new Web3(RoninRestRoninProviderWS);
+        window.provider = RoninRestRoninProviderWS;
+        window.provider.connection.onopen = async function() {
+            const u = new URL(window.provider.url);
+            const web3Version = await ronin.eth.getNodeInfo();
+            document.getElementById("status").innerHTML = "Connected to: " + u.origin + " (" + web3Version + ")";
+        }
+        window.provider.connection.onerror = function() {
+            document.getElementById("status").innerHTML = "Error!";
+        }
+        window.provider.connection.onclose = function() {
+            document.getElementById("status").innerHTML = "Disconnected!";
+        }
+
+
+        const container = document.getElementById("trxs");
+        ronin.eth.subscribe("logs", {
+            address: "0xa8754b9fa15fc18bb59458815510e40a12cd2014",
+            topics: ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"]
+        }, function (error, result) {
+            if (!error) {
+                let from = fix(result.topics[1]);
+                let to = fix(result.topics[2]);
+                let amount = parseInt(result.data, 16)
+
+                let msg = `<a target="_blank" href="https://explorer.roninchain.com/tx/${result.transactionHash}"><code>${from}</code> SENT <code>${amount} SLP</code> TO <code>${to}</code></a> `;
+                const p = document.createElement("p");
+                p.innerHTML = msg;
+                container.prepend(p);
+            }
+
+        })
+        window.ronin = ronin
+    }
+</script>
+</body>
+</html>
