@@ -81,8 +81,8 @@
                 onTimeout: false
             }
         });
-
-        const ronin = new Web3(RoninRestRoninProviderWS);       
+        const ronin = new Web3(RoninRestRoninProviderWS);
+        window.provider = RoninRestRoninProviderWS;
         window.provider.connection.onopen = async function() {
             const u = new URL(window.provider.url);
             const web3Version = await ronin.eth.getNodeInfo();
