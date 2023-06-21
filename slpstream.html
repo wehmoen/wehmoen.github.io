@@ -105,7 +105,7 @@
                 let to = fix(result.topics[2]);
                 let amount = parseInt(result.data, 16)
 
-                let msg = `<a target="_blank" href="https://explorer.roninchain.com/tx/${result.transactionHash}"><code>${from}</code> SENT <code>${amount} SLP</code> TO <code>${to}</code></a> `;
+                let msg = `<a target="_blank" href="https://legacy-explorer.roninchain.com/tx/${result.transactionHash}"><code>${from}</code> SENT <code>${amount} SLP</code> TO <code>${to}</code></a> `;
                 const p = document.createElement("p");
                 p.innerHTML = msg;
                 container.prepend(p);
