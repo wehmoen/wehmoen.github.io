@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live SLP Transactions - RONIN SAIGON NETWORK</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: beige;
+            font-family: 'Comic Sans MS', system-ui, sans-serif;
+        }
+
+        code {
+            background: #252525;
+            color: #f13434;
+            padding: 5px 7px;
+            border-radius: 3px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00B7FF;
+        }
+
+        #status {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            height: 25px;
+            background: white;
+            border-top: 1px solid black;
+        }
+
+        #status > div {
+            display: inline-block;
+            padding-right: 5px;
+        }
+
+        h1 {
+            margin-bottom: 0;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body style="text-align: center">
+<h1>Live SLP Transactions</h1>
+<h3 id="block"></h3>
+<div id="status">
+    <div id="connection">
+        Connecting...
+    </div>
+    <div id="latency">0ms</div>
+</div>
+<div id="trxs"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7/web3.min.js"></script>
+<script>
+    async function latency() {
+        const start = new Date().getTime();
+        await window.ronin.eth.getBlockNumber();
+        const end = new Date().getTime();
+        return end - start;
+    }
+
+    function fix(str) {
+        let rstr = str.split("").reverse().join("");
+        rstr = rstr.substring(0, 40);
+        return "0x" + rstr.split("").reverse().join("");
+    }
+
+    window.onload = function () {
+        const RoninRestRoninProviderWS = new Web3.providers.WebsocketProvider("wss://rpc2.ronin.rest/ronin-testnet/ws", {
+            reconnect: {
+                auto: true,
+                delay: 5000,
+                maxAttempts: 5,
+                onTimeout: false
+            }
+        });
+        const ronin = new Web3(RoninRestRoninProviderWS);
+        window.provider = RoninRestRoninProviderWS;
+        window.provider.connection.onopen = async function() {
+            const u = new URL(window.provider.url);
+            const web3Version = await ronin.eth.getNodeInfo();
+            document.getElementById("connection").innerHTML = "Connected to: " + u.origin + " (" + web3Version + ")";
+        }
+        window.provider.connection.onerror = function() {
+            document.getElementById("connection").innerHTML = "Error!";
+        }
+        window.provider.connection.onclose = function() {
+            document.getElementById("connection").innerHTML = "Disconnected!";
+        }
+
+        const container = document.getElementById("trxs");
+        ronin.eth.subscribe("logs", {
+            address: "0x82f5483623d636bc3deba8ae67e1751b6cf2bad2",
+            topics: ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"]
+        }, function (error, result) {
+            if (!error) {
+                let from = fix(result.topics[1]);
+                let to = fix(result.topics[2]);
+                let amount = parseInt(result.data, 16)
+
+                let msg = `<a target="_blank" href="https://legacy-saigon-explorer.roninchain.com/tx/${result.transactionHash}"><code>${from}</code> SENT <code>${amount} SLP</code> TO <code>${to}</code></a> `;
+                const p = document.createElement("p");
+                p.innerHTML = msg;
+                container.prepend(p);
+            }
+        })
+
+        ronin.eth.subscribe('newBlockHeaders', function(error, result) {
+            if (!error) {
+                document.getElementById("block").innerText = "Block " + result.number;
+            }
+        });
+
+        const lCon = document.getElementById("latency");
+        setInterval(async function() {
+            const l = await latency();
+            lCon.innerText = l + "ms";
+        }, 500);
+
+        window.ronin = ronin
+    }
+</script>
+</body>
+</html>
