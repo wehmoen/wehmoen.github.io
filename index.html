@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nico Wehmöller - Softwareentwickler aus Kupferzell</title>
+    <link rel="stylesheet" type="text/css" href="app.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/46fb0bf9db.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div id="main">
+        <h1>Nico Wehmöller</h1>
+        <h2>Softwareentwickler aus Kufperzell</h2>
+        <div id="more">
+            <a href="https://github.com/wehmoen" target="_blank">
+                <i class="fa-brands fa-github fa-2xl" style="color: #888888;"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/nico-wehm%C3%B6ller/" target="_blank">
+                <i class="fa-brands fa-linkedin fa-2xl" style="color: #888888;"></i>
+            </a>
+            <a href="https://meet.wehmoen.dev" target="_blank">
+                <i class="fa-solid fa-calendar-users fa-2xl" style="color: #888888;"></i>
+            </a>
+        </div>
+    </div>
+</header>
+<footer>
+    <p>Contact: nico /at/ wehmoen /./ dev</p>
+</footer>
+<script>
+    window.onload = function() {
+        const bgText = btoa(document.getElementsByTagName("html")[0].innerHTML).repeat(100);
+        const bg = document.createElement("div");
+        bg.classList.add("bg");
+        bg.innerText = bgText
+        document.body.prepend(bg)
+    }
+</script>
+</body>
+</html>
